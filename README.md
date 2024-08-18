@@ -14,7 +14,6 @@ This repository contains a suite of scripts designed to process and analyse Next
 3. [Installation](#installation)
 4. [Usage](#usage)
    - [Running the Pipeline](#running-the-pipeline)
-5. [License](#license)
 
 ## Overview
 
@@ -156,4 +155,3 @@ Follow these steps to run the complete NGS mutation analysis pipeline:
    ```bash
    Jupyter Notebook
    ```
-## License
