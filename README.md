@@ -1,6 +1,6 @@
 # NGS Mutation Analysis Pipeline
 
-This repository contains a suite of scripts designed to process and analyze Next-Generation Sequencing (NGS) data. The primary goal is to quantify mutation frequencies, calculate enrichment of mutations, and visualize these mutations under various experimental conditions. The pipeline leverages unique molecular identifiers (UMIs) to reduce sequencing errors and accurately identify true mutations.
+This repository contains a suite of scripts designed to process and analyze Next-Generation Sequencing (NGS) data. The primary goal is to quantify mutation frequencies, calculate enrichment of mutations, and visualise these mutations under various experimental conditions. The pipeline leverages unique molecular identifiers (UMIs) to reduce sequencing errors and accurately identify true mutations.
 
 ## Table of Contents
 
