@@ -19,11 +19,11 @@ This repository contains a suite of scripts designed to process and analyse Next
 
 This software package is developed to quantify the frequencies of each mutation in NGS sequences and compare these frequencies across different datasets to calculate mutation enrichment. The pipeline involves the following steps:
 
-1. **Grouping sequences by UMI:** Generates consensus sequences to minimize errors.
+1. **Grouping sequences by UMI:** Generates consensus sequences to minimise errors.
 2. **Variant Calling:** Identifies mutations from consensus sequences.
 3. **Mutation Frequency and Enrichment Analysis:** Compares mutation frequencies across different experimental conditions.
 4. **Data Cleaning:** Refines the results by removing artifacts and irrelevant data.
-5. **Visualization:** Generates plots to visualize mutation frequencies and enrichments.
+5. **Visualization:** Generates plots to visualise mutation frequencies and enrichments.
 
 ## Pipeline Components
 
