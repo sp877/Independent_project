@@ -1,124 +1,159 @@
 # NGS Mutation Analysis Pipeline
 
+This repository contains a suite of scripts designed to process and analyze Next-Generation Sequencing (NGS) data. The primary goal is to quantify mutation frequencies, calculate enrichment of mutations, and visualize these mutations under various experimental conditions. The pipeline leverages unique molecular identifiers (UMIs) to reduce sequencing errors and accurately identify true mutations.
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Pipeline Components](#pipeline-components)
+   - [1. Consensus Sequence Generation](#1-consensus-sequence-generation)
+   - [2. Variant Calling and Processing](#2-variant-calling-and-processing)
+   - [3. Enrichment Calculation](#3-enrichment-calculation)
+   - [4. Data Cleaning](#4-data-cleaning)
+   - [5. Visualisation](#5-visualisation)
+3. [Installation](#installation)
+4. [Usage](#usage)
+   - [Running the Pipeline](#running-the-pipeline)
+5. [License](#license)
+
 ## Overview
 
-This repository contains a series of scripts designed to analyze next-generation sequencing (NGS) data to quantify mutation frequencies, compare mutation frequencies across different NGS datasets, and calculate the enrichment of specific mutations under various experimental conditions. The pipeline is designed to handle data that includes unique molecular identifiers (UMIs) to generate consensus sequences, thereby filtering out PCR and sequencing artifacts, and ensuring accurate mutation detection.
+This software package is developed to quantify the frequencies of each mutation in NGS sequences and compare these frequencies across different datasets to calculate mutation enrichment. The pipeline involves the following steps:
 
-### Key Features:
-- **Consensus Sequence Generation**: Group sequences by UMIs and derive consensus sequences to minimize PCR artifacts.
-- **Variant Calling**: Use the ASMV software for variant calling on consensus sequences.
-- **Mutation Frequency Calculation**: Quantify the frequency of mutations within different NGS datasets.
-- **Enrichment Analysis**: Compare mutation frequencies across datasets to calculate the enrichment of mutations.
-- **Visualisation**: Generate visualisations, including frequency plots, enrichment graphs, and pie charts, to analyse mutation distributions.
+1. **Grouping sequences by UMI:** Generates consensus sequences to minimize errors.
+2. **Variant Calling:** Identifies mutations from consensus sequences.
+3. **Mutation Frequency and Enrichment Analysis:** Compares mutation frequencies across different experimental conditions.
+4. **Data Cleaning:** Refines the results by removing artifacts and irrelevant data.
+5. **Visualization:** Generates plots to visualize mutation frequencies and enrichments.
 
-## Scripts
+## Pipeline Components
 
-### 1. `consensus_script.py`
+### 1. Consensus Sequence Generation
 
-**Purpose**: This script processes NGS data to group sequences by UMIs, generate consensus sequences, and prepare data for variant calling.
+The `consensus_script.py` script processes NGS data by grouping sequences based on UMIs. This step ensures that only real mutations are retained by generating consensus sequences from UMI families.
 
-**Key Functions**:
-- `extract_umi_and_sequence(fastq_file)`: Extracts UMIs and corresponding sequences from a FASTQ file.
-- `group_by_umi(records, output_file, discarded_output_file, min_family_size=2)`: Groups sequences by UMI and outputs grouped sequences.
-- `find_consensus_sequence(sequences, qualities, threshold=1.0, am_threshold=0.4)`: Derives a consensus sequence for each UMI group.
-- `process_umi_groups(grouped_records, consensus_output_file, min_family_size=2, consensus_threshold=1.0, am_threshold=0.4)`: Processes UMI groups to find consensus sequences.
+- **Inputs:** FASTQ files with UMIs.
+- **Outputs:** FASTQ files containing consensus sequences.
 
-**Usage**:
-```bash
-python consensus_script.py
+### 2. Variant Calling and Processing
 
-### 2. `process_output_script.sh`
+The `processing_script.sh` script aligns the reads, performs variant calling using the GATK `AnalyzeSaturationMutagenesis` tool, and prepares the data for further analysis.
 
-**Purpose**: This Bash script processes the output from the consensus script by aligning reads, converting file formats, and running the ASMV variant calling tool.
+- **Inputs:** Consensus sequence FASTQ files.
+- **Outputs:** BAM files, variant counts.
 
-**Key Steps**:
+### 3. Enrichment Calculation
 
-- Activates the required conda environment.
-- Aligns reads using BWA and converts SAM to BAM files using Samtools.
-- Runs GATK AnalyzeSaturationMutagenesis to identify mutations.
+The enrichment scripts (`enrichment__script_nt.py` and `enrichment_script_aa.py`) calculate mutation frequencies and enrichment values by comparing different experimental groups.
 
-**Usage**:
-```bash
-./process_output_script.sh
+- **Inputs:** Variant count files.
+- **Outputs:** Enrichment matrices for nucleotides and amino acids.
 
-### 3. `enrichment_script_nucleotide.py`
+### 4. Data Cleaning
 
-**Purpose**: This script calculates mutation frequency ratios and performs enrichment analysis based on nucleotide sequences.
+The cleaning scripts (`clean_frequency_matrix_nt.py`, `clean_enrichment_matrix_nt.py`, `clean_frequency_matrix_aa.py` and `clean_enrichment_matrix_aa.py`) remove irrelevant data points and ensure the matrices contain only relevant data within specified amplicon ranges.
 
-**Key Functions**:
+- **Inputs:** Frequency and enrichment matrices.
+- **Outputs:** Cleaned matrices ready for visualization.
 
-- `read_and_process_data(file_path)`: Reads and processes variant count files.
-- `calculate_ratios(data, max_mutations)`: Calculates mutation frequency ratios.
-- `calculate_enrichment()`: Calculates enrichment values by comparing mutation frequencies across datasets.
+### 5. Visualisation
 
-**Usage**:
-```bash
-python enrichment_script_nucleotide.py
+Jupyter notebooks (`visualisations_nucleotide.ipynb` and `visualisations_aminoacids.ipynb` ) are used to generate various plots, including frequency graphs, enrichment maps, and violin plots, which help in understanding the mutation landscape.
 
-### 4. `enrichment_script_amino_acid.py`
-
-**Purpose**: This script performs enrichment analysis based on amino acid sequences, similar to the nucleotide script.
-
-**Key Functions**:
-
-- `read_and_process_data(file_path)`: Reads and processes variant count files.
-- `calculate_ratios(data, max_nucleotide_changes)`: Calculates mutation frequency ratios based on amino acid changes.
-
-**Usage**:
-```bash
-python enrichment_script_amino_acid.py
-
-### 5. Cleaning Scripts
-
-**Purpose**: These scripts clean the frequency and enrichment matrices by applying specific filters based on amplicon ranges.
-
-**Scripts**:
-
-- `clean_frequency_matrix_nucleotide.py`
-- `clean_enrichment_matrix_nucleotide.py`
-
-**Usage**:
-python clean_frequency_matrix_nucleotide.py
-python clean_enrichment_matrix_nucleotide.py
-
-### 6. Jupyter Notebook: `visualization_notebook.ipynb`
-
-**Purpose**: A Jupyter Notebook for generating various visualizations such as frequency plots, enrichment graphs, pie charts, and violin plots.
-
-**Usage**:
-
-- Open the notebook using Jupyter and run the cells to generate visualizations.
+- **Inputs:** Cleaned matrices.
+- **Outputs:** Graphs and charts (e.g., frequency plots, enrichment maps).
 
 ## Installation
+   
+### Install Python dependencies:
 
-1. Clone this repository:
+Make sure you have Python 3 installed. Then, install the required Python packages using pip:
 
-    ```bash
-    git clone https://github.com/yourusername/NGS_Mutation_Analysis_Pipeline.git
-    ```
+```bash
+pip install -r requirements.txt
+``` 
 
-2. Install the required dependencies using conda:
+### Set up the Conda environment: 
 
-    ```bash
-    conda create -n umi_env -f environment.yml
-    conda activate umi_env
-    ```
+If you haven't already, install Conda (Miniconda or Anaconda). Then, create and activate the environment needed for bioinformatics tools:
 
-## Usage
+```bash
+conda create -n umi_env
+conda activate umi_env
+conda install -c bioconda bwa samtools gatk4 picard
+```
+This will install the following tools:
 
-Follow the steps below to execute the pipeline:
+- **BWA**: For aligning reads.
+- **Samtools**: For processing BAM files.
+- **GATK**: For variant calling.
+- **Picard**: For manipulating sequence files.
 
-1. **Generate Consensus Sequences**: Run `consensus_script.py` to process your FASTQ files and generate consensus sequences.
-2. **Process Outputs**: Use `process_output_script.sh` to align sequences and perform variant calling.
-3. **Calculate Enrichment**: Run the enrichment scripts to calculate mutation enrichment based on nucleotides or amino acids.
-4. **Clean Data**: Use the cleaning scripts to clean your frequency and enrichment matrices.
-5. **Visualize Results**: Use the Jupyter notebook to visualize the results.
+### Download and prepare reference data:
 
+Ensure you have the necessary reference sequences and index them as needed for BWA and GATK.
+
+## Usage 
+
+### Running the Pipeline
+
+Follow these steps to run the complete NGS mutation analysis pipeline:
+
+1. **Generate Consensus Sequences:**
+
+   Run the script to generate consensus sequences from your FASTQ files:
+
+   ```bash
+   python consensus_script.py
+   ```
+   
+2. **Process the Output:**
+
+   Execute the shell script to align reads, perform variant calling, and process the BAM files:
+
+   ```bash
+   bash Processing_script.sh
+   ```
+
+3. **Calculate Enrichment:**
+
+   Run the enrichment calculation scripts to compare mutation frequencies across different experimental groups:
+
+   For Nulceotides:
+   ```bash
+   python enrichment_script_nt.py
+   ```
+   
+   For amino acids:
+   ```bash
+   python enrichment_script_aa.py
+   ```
+   
+4. **Clean the Data:**
+
+   Clean the frequency and enrichment matrices to remove irrelevant data points:
+
+   For Nulceotides:
+   ```bash
+   python clean_frequency_matrix_nt.py
+   ```
+   ```bash
+   python clean_enrichment_matrix_nt.py
+   ```
+   
+   For amino acids:
+   ```bash
+   python clean_frequency_matrix_aa.py
+   ```
+   ```bash
+   python clean_enrichment_matrix_aa.py
+   ```
+
+5. **Visualisation:**
+
+   Use the provided Jupyter notebook (`visualisations_nucleotide.ipynb` and `visualisations_aminoacids.ipynb` ) to generate various plots. Launch Jupyter Notebook in your terminal:
+
+   ```bash
+   Jupyter Notebook
+   ```
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any inquiries or contributions, please contact `yourname`.
-
