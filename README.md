@@ -22,8 +22,8 @@ This software package is developed to quantify the frequencies of each mutation 
 1. **Grouping sequences by UMI:** Generates consensus sequences to minimise errors.
 2. **Variant Calling:** Identifies mutations from consensus sequences.
 3. **Mutation Frequency and Enrichment Analysis:** Compares mutation frequencies across different experimental conditions.
-4. **Data Cleaning:** Refines the results by removing artifacts and irrelevant data.
-5. **Visualization:** Generates plots to visualise mutation frequencies and enrichments.
+4. **Data Cleaning:** Focussing only on the actual sequence for analysis.
+5. **Visualisation:** Generates plots to visualise mutation frequencies and enrichments.
 
 ## Pipeline Components
 
