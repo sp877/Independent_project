@@ -50,7 +50,7 @@ The enrichment scripts (`enrichment__script_nt.py` and `enrichment_script_aa.py`
 
 ### 4. Data Cleaning
 
-The cleaning scripts (`clean_frequency_matrix_nt.py`, `clean_enrichment_matrix_nt.py`, `clean_frequency_matrix_aa.py` and `clean_enrichment_matrix_aa.py`) remove irrelevant data points and ensure the matrices contain only relevant data within specified amplicon ranges.
+The cleaning scripts (`clean_frequency_matrix_nt.py`, `clean_enrichment_matrix_nt.py`, `clean_frequency_matrix_aa.py` and `clean_enrichment_matrix_aa.py`) to only focus on the actual sequence for analysis.
 
 - **Inputs:** Frequency and enrichment matrices.
 - **Outputs:** Cleaned matrices ready for visualization.
